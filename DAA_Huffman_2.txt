@@ -1,0 +1,76 @@
+import heapq
+
+class HuffmanNode:
+    def __init__(self, frequency, character, left=None, right=None):
+        self.frequency = frequency
+        self.character = character
+        self.left = left
+        self.right = right
+        self.code = ''
+
+
+    def __lt__(self, other):
+        return self.frequency < other.frequency
+
+
+def print_huffman_codes(node, code=''):
+    current_code = code + str(node.code)
+
+    if node.left:
+        print_huffman_codes(node.left, current_code)
+    if node.right:
+        print_huffman_codes(node.right, current_code)
+    
+    # Leaf node, print the character and its code
+    if not node.left and not node.right:
+        print(f"{node.character} -> {current_code}")
+
+# Function to build the Huffman Tree
+def build_huffman_tree(characters, frequencies):
+
+    heap = [HuffmanNode(frequencies[i], characters[i]) for i in range(len(characters))]
+    heapq.heapify(heap)
+
+    while len(heap) > 1:
+
+        left_node = heapq.heappop(heap)
+        right_node = heapq.heappop(heap)
+
+
+        left_node.code = 0
+        right_node.code = 1
+
+
+        merged_node = HuffmanNode(left_node.frequency + right_node.frequency, 
+                                  left_node.character + right_node.character, 
+                                  left_node, right_node)
+        heapq.heappush(heap, merged_node)
+
+
+    return heap[0]
+
+
+def get_user_input():
+    characters = input("Enter characters separated by spaces: ").split()
+    frequencies = list(map(int, input("Enter frequencies separated by spaces: ").split()))
+
+    if len(characters) != len(frequencies):
+        raise ValueError("The number of characters must match the number of frequencies.")
+
+    return characters, frequencies
+
+
+def main():
+    try:
+        characters, frequencies = get_user_input()
+        huffman_root = build_huffman_tree(characters, frequencies)
+        print("\nHuffman Codes:")
+        print_huffman_codes(huffman_root)
+    except ValueError as e:
+        print(f"Input Error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+
+if __name__ == "__main__":
+    main()
