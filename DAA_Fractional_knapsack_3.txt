@@ -1,0 +1,41 @@
+def fractional_knapsack(capacity, weights, values):
+    # Calculate value-to-weight ratios and sort items by ratio in descending order
+    items = sorted(zip(weights, values), key=lambda x: x[1] / x[0], reverse=True)
+
+    max_profit = 0.0
+    fractions = []
+
+    # Iterate over sorted items
+    for weight, value in items:
+        if capacity > 0 and weight <= capacity:
+            # Take the whole item
+            fractions.append(1.0)
+            capacity -= weight
+            max_profit += value
+        else:
+            # Take a fraction of the item
+            fraction = capacity / weight if weight != 0 else 0
+            fractions.append(fraction)
+            max_profit += value * fraction
+            break  # Knapsack is full
+
+    return fractions, max_profit
+
+def main():
+    # Input weights, values, and capacity
+    num_items = int(input("Enter number of items: "))
+    weights = [float(input(f"Enter weight of item {i+1}: ")) for i in range(num_items)]
+    values = [float(input(f"Enter value of item {i+1}: ")) for i in range(num_items)]
+    capacity = float(input("Enter knapsack capacity: "))
+
+    # Solve knapsack problem
+    fractions, max_profit = fractional_knapsack(capacity, weights, values)
+
+    # Display results
+    print("\nFractions of items to include:")
+    for i, fraction in enumerate(fractions, start=1):
+        print(f"Item {i}: {fraction:.2f}")
+    print(f"Maximum profit: {max_profit:.2f}")
+
+if __name__ == "__main__":
+    main()
