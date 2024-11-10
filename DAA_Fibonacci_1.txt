@@ -6,20 +6,17 @@ def recur_fibo(n):
 
 def iterative_fibo(nterms):
     n1, n2 = 0, 1
-    count = 0
     if nterms <= 0:
         print("Please enter a positive integer")
+        return
     elif nterms == 1:
         print("Fibonacci sequence up to", nterms, ":")
         print(n1)
     else:
         print("Fibonacci sequence:")
-        while count < nterms:
+        for _ in range(nterms):
             print(n1)
-            nth = n1 + n2
-            n1 = n2
-            n2 = nth
-            count += 1
+            n1, n2 = n2, n1 + n2
 
 def main():
     while True:
@@ -34,19 +31,23 @@ def main():
             print("Exiting the program.")
             break
 
-        nterms = int(input("How many terms? "))
-
-        if choice == '1':
-            iterative_fibo(nterms)
-        elif choice == '2':
+        try:
+            nterms = int(input("How many terms? "))
             if nterms <= 0:
-                print("Please enter a positive integer")
-            else:
+                print("Please enter a positive integer.")
+                continue
+
+            if choice == '1':
+                iterative_fibo(nterms)
+            elif choice == '2':
                 print("Fibonacci sequence:")
                 for i in range(nterms):
                     print(recur_fibo(i))
-        else:
-            print("Invalid choice. Please select 1, 2, or 3.")
+            else:
+                print("Invalid choice. Please select 1, 2, or 3.")
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
 
+# Run the main function
 if __name__ == "__main__":
     main()
