@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract DBank {
+    address public owner;
+    mapping(address => uint) private balances;
+
+    // Set the contract deployer as the owner
+    constructor() {
+        owner = msg.sender;
+    }
+
+    // Deposit function to add Ether to the sender's balance
+    function deposit(uint amount) public returns (uint) {
+        require(msg.sender == owner, "Only the owner can deposit.");
+        balances[msg.sender] += amount;
+        return balances[msg.sender];
+    }
+
+    // View the balance of the sender's account
+    function getBalance() public view returns (uint) {
+        return balances[msg.sender];
+    }
+
+    // Transfer funds from the sender to the recipient
+    function transfer(address recipient, uint amount) public {
+        require(msg.sender != recipient, "Cannot transfer to self.");
+        require(balances[msg.sender] >= amount, "Insufficient balance.");
+
+        _executeTransfer(msg.sender, recipient, amount);
+    }
+
+    // Internal function to execute the transfer
+    function _executeTransfer(address from, address to, uint amount) private {
+        balances[from] -= amount;
+        balances[to] += amount;
+    }
+}
